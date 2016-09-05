@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Formulario</string>
+    <string-array name="city_array">
+        <item>Medallo</item>
+        <item>Bogotá</item>
+        <item>Manizales</item>
+        <item>Pereira</item>
+        <item>New York</item>
+        <item>Londres</item>
+        <item>Tokio</item>
+        <item>Machupichu</item>
+    </string-array>
+</resources>

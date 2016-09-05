@@ -1,0 +1,1 @@
+include ':app', ':calculadoraizi', ':fig_geométricas', ':formulario'
