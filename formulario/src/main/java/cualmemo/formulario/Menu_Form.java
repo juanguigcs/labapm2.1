@@ -8,6 +8,7 @@ import android.icu.util.Calendar;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -16,12 +17,17 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Menu_Form extends AppCompatActivity {
     EditText etUsuario,etPass,etRpass,etCorreo;
-    TextView tvUsuario,tvCorreo,tvGene,tvLugar,tvHobbi;
+    TextView tvUsuario,tvCorreo,tvGene,tvLugar,tvHobbi,tvFecha2;
     Button  bAcept;
-    int stado,flagG;
+    int stado;
+    int flagG;
+    int flagRb;
+     int contt;
+    int flagok;
     final String fecha2="";
 
 
@@ -30,6 +36,9 @@ public class Menu_Form extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu__form);
 
+        stado=5;
+        contt=0;
+        flagok=0;
         etUsuario=(EditText)findViewById(R.id.etusuario);
         etPass=(EditText)findViewById(R.id.etpass);
         etRpass=(EditText)findViewById(R.id.etrpass);
@@ -40,6 +49,7 @@ public class Menu_Form extends AppCompatActivity {
         tvGene =(TextView)findViewById(R.id.tvgene);
         tvLugar =(TextView)findViewById(R.id.tvlugar);
         tvHobbi =(TextView)findViewById(R.id.tvhobbi);
+        tvFecha2=(TextView)findViewById(R.id.tvfecha);
 
         Spinner spinner = (Spinner) findViewById(R.id.city_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.city_array, android.R.layout.simple_spinner_item);
@@ -55,32 +65,67 @@ public class Menu_Form extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-            tvUsuario.setText(etUsuario.getText());
-            tvCorreo.setText(etCorreo.getText());
-            switch (flagG){
-                case 1:
-                    tvGene.setText("masculino");
-                    break;
-                case 2:
-                    tvGene.setText("femenino");
-                    break;
+            String Sfechaf = tvFecha2.getText().toString();
+
+            if (TextUtils.isEmpty(Sfechaf)) {
+                Toast.makeText(getApplicationContext(),"Falta la fecha .-.", Toast.LENGTH_SHORT).show();
+                contt =0;
             }
-               // if(etCorreo.getText().equals(null)){
+            else{
+                contt +=1;
+            }
+            String Susuario= etUsuario.getText().toString();
+            String Spass= etPass.getText().toString();
+            String Srpass= etRpass.getText().toString();
+            String Scorreo= etCorreo.getText().toString();
 
-                //}
-            //tvFecha.setText("fehcadehoy");
-            tvLugar.setText("lugarhoy");
-            tvHobbi.setText("los hobbies");
+            if (TextUtils.isEmpty(Susuario)||TextUtils.isEmpty(Spass)||TextUtils.isEmpty(Srpass)||TextUtils.isEmpty(Scorreo)) {
+                Toast.makeText(getApplicationContext(),"Elementos vacíos .-.", Toast.LENGTH_SHORT).show();
+                contt =0;
+            }
+            else {
+                contt +=1;
+            }
+            if(flagRb==0){
+                contt =0;
+                Toast.makeText(getApplicationContext(),"Género vacío .-.", Toast.LENGTH_SHORT).show();
+            }
+            else {
 
+                contt +=1;
+            }
+            if(contt==3){
+                Toast.makeText(getApplicationContext(),"estás acá .-.", Toast.LENGTH_SHORT).show();
+                if(Spass.equals(etRpass.getText().toString())){
+                    flagok =1;
+                    tvUsuario.setText(etUsuario.getText());
+                    tvCorreo.setText(etCorreo.getText());
+                    switch (flagG){
+                        case 1:
+                            tvGene.setText("masculino");
+                            break;
+                        case 2:
+                            tvGene.setText("femenino");
+                            break;
+                    }
+                    tvLugar.setText("falta el lugar");
+                    tvHobbi.setText("falta los hobbies");
+
+                }
+                else {
+                    Toast.makeText(getApplicationContext(),"Contraseña incorrecta .-.", Toast.LENGTH_SHORT).show();
+                }
+                contt =0;
 
             }
+        }
         });
-
     }
+
     public void onRadioButtonClicked(View view) {
         // Is the button now checked?
         boolean checked = ((RadioButton) view).isChecked();
-
+        flagRb =1;
         // Check which radio button was clicked
         switch (view.getId()) {
             case R.id.rbmasc:
@@ -97,8 +142,9 @@ public class Menu_Form extends AppCompatActivity {
     }
     public static class DatePickerFragment extends DialogFragment
             implements DatePickerDialog.OnDateSetListener {
-
+        //static int conee=contt;
         @Override
+
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // Use the current date as the default date in the picker
 
@@ -155,14 +201,17 @@ public class Menu_Form extends AppCompatActivity {
                     break;
 
             }
+
             final String año = String.valueOf(year);
             final String dia = String.valueOf(day);
             final String mes2 = mes;
             String Fecha= dia + mes2+ año;
+
             tvFecha.setText(Fecha);
         }
     }
     public void showDatePickerDialog(View v) {
+
         DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getFragmentManager(),"datePicker");
 
